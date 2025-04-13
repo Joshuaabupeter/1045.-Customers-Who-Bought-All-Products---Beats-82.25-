@@ -1,0 +1,16 @@
+with product_count
+as(select count( product_key) as count_product
+from Product),
+
+complete_customer as(select 
+case
+when count(distinct a.product_key)>= pc.count_product then customer_id
+else null
+end as 'customer_id' 
+from Customer as a, Product as p, product_count as pc 
+where a.product_key=p.product_key 
+group by a.customer_id)
+
+select customer_id  from
+complete_customer
+where customer_id is not null
